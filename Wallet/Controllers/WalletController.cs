@@ -37,7 +37,6 @@ namespace Wallet.Controllers
         public JsonResult GetWalletStatement([FromServices] WalletService walletService, [FromQuery] long userId)
         {
             var records = walletService.GetWalletStatement(userId);
-            //var result = String.Join("\n", records.Select(x => $"{x.CurrencyTitle}: {x.Sum.ToString()}"));
             return new JsonResult(records);
         }
     }
