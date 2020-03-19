@@ -33,7 +33,7 @@ namespace Wallet.Controllers
             return new JsonResult("Ok");
         }
 
-        [HttpPost("[action]")]
+        [HttpGet("[action]")]
         public JsonResult GetWalletStatement([FromServices] WalletService walletService, [FromQuery] long userId)
         {
             var records = walletService.GetWalletStatement(userId);
