@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DomainModel
 {
@@ -10,5 +11,7 @@ namespace DomainModel
     public interface IExchangeRateService
     {
         decimal GetExchangeRate(string sourceCurrencyCode, string destinationCurrencyCode);
+
+        Task<decimal> GetExchangeRateAsync(string sourceCurrencyCode, string destinationCurrencyCode);
     }
 }

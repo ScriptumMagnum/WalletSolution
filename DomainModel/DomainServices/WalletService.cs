@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DomainModel.DomainServices
 {
@@ -84,6 +85,38 @@ namespace DomainModel.DomainServices
                 throw new ArgumentException($"В БД не найдена валюта с ИД = {destinationCurrencyId}");
 
             var exchangeRate = exchangeRateService.GetExchangeRate(sourceCurrency.Code, destinationCurrency.Code);
+
+            wallet.Withdraw(sourceCurrencyId, sumInSourceCurrency);
+
+            var sumInDestinationCurrency = sumInSourceCurrency * exchangeRate;
+
+            wallet.Deposit(destinationCurrencyId, sumInDestinationCurrency);
+            walletRepository.Update(wallet);
+        }
+
+        /// <summary>
+        /// Обменять валюту
+        /// </summary>
+        /// <param name="sourceCurrencyId">Идентификатор исходящей валюты</param>
+        /// <param name="destinationCurrencyId">Идентификатор входящей валюты</param>
+        /// <param name="sumInSourceCurrency">Сумма в исходящей валюте</param>
+        public async Task ExchangeAsync(long userId, int sourceCurrencyId, int destinationCurrencyId, decimal sumInSourceCurrency)
+        {
+            var wallet = walletRepository.GetWalletByUserId(userId);
+
+            if (wallet == null)
+                throw new ArgumentException($"В системе не заведен кошелек для пользователя с ИД = {userId}");
+
+            var sourceCurrency = currencyRepository.GetCurrencyById(sourceCurrencyId);
+            var destinationCurrency = currencyRepository.GetCurrencyById(destinationCurrencyId);
+
+            if (sourceCurrency == null)
+                throw new ArgumentException($"В БД не найдена валюта с ИД = {sourceCurrencyId}");
+
+            if (destinationCurrency == null)
+                throw new ArgumentException($"В БД не найдена валюта с ИД = {destinationCurrencyId}");
+
+            var exchangeRate = await exchangeRateService.GetExchangeRateAsync(sourceCurrency.Code, destinationCurrency.Code);
 
             wallet.Withdraw(sourceCurrencyId, sumInSourceCurrency);
 

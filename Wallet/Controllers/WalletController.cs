@@ -27,9 +27,9 @@ namespace Wallet.Controllers
         }
 
         [HttpPost("[action]")]
-        public JsonResult Exchange([FromServices] WalletService walletService, [FromQuery] long userId, [FromQuery] int sourceCurrencyId, [FromQuery] int destinationCurrencyId, [FromQuery] decimal sumInSourceCurrency)
+        public async Task<JsonResult> ExchangeAsync([FromServices] WalletService walletService, [FromQuery] long userId, [FromQuery] int sourceCurrencyId, [FromQuery] int destinationCurrencyId, [FromQuery] decimal sumInSourceCurrency)
         {
-            walletService.Exchange(userId, sourceCurrencyId, destinationCurrencyId, sumInSourceCurrency);
+            await walletService.ExchangeAsync(userId, sourceCurrencyId, destinationCurrencyId, sumInSourceCurrency);
             return new JsonResult("Ok");
         }
 
